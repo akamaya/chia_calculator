@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="jp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='http://fonts.googleapis.com/css?family=M PLUS 1p' rel='stylesheet' type='text/css'>
+    <script src="./chia_cal.js"></script>
+    <title>chia計算機</title>
+    <style>
+        body {
+            font-family: 'M PLUS 1p';
+        }
+
+        ul {
+            padding: 0px;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .flexContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .flexItem {
+            width: 100%;
+            border-radius: 1em;
+            border: 3px solid deepskyblue;
+            box-sizing: border-box;
+            margin-top: 2em;
+            padding: 0.5em;
+        }
+
+        .flexItem_half {
+            width: 48%;
+            border-radius: 1em;
+            border: 3px solid deepskyblue;
+            box-sizing: border-box;
+            margin-top: 2em;
+            padding: 0.5em;
+        }
+
+        #income {
+            border: 3px solid mediumseagreen;
+        }
+
+        #income header {
+            color: rgb(31, 90, 57);
+        }
+
+        #expense {
+            border: 3px solid orange;
+        }
+
+        #expense header {
+            color: rgb(191, 125, 3);
+        }
+
+        #chia_data {
+            border: 3px solid deepskyblue;
+        }
+
+        #chia_data header {
+            color: rgb(2, 123, 163);
+        }
+
+        #gpu_data {
+            border: 3px solid rgb(211, 35, 35);
+        }
+
+        #gpu_data header {
+            color: rgb(163, 27, 27);
+        }
+
+        #hdd_profit_data header {
+            color: rgb(2, 123, 163);
+        }
+
+        #hdd_gpu_profit_data header {
+            color: rgb(2, 123, 163);
+        }
+
+        .cal_item {
+            display: flex;
+            margin-left: 1em;
+        }
+
+        .flexItem .cal_item_name {
+            inline-size: 16em;
+        }
+
+        .flexItem_half .cal_item_name {
+            inline-size: 12em;
+        }
+
+        .cal_item_box input {
+            inline-size: 5em;
+            text-align: right;
+        }
+
+        .flexItem.cal_item_box {
+            inline-size: 10em;
+            text-align: right;
+        }
+
+        .disabled {
+            background-color: gray;
+        }
+
+        .border {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            width: 9em;
+            border-top: 3px solid mediumseagreen;
+        }
+
+        #income .border {
+            border-top: 3px solid mediumseagreen;
+        }
+
+        #expense .border {
+            border-top: 3px solid orange;
+        }
+
+        #chia_data .border {
+            border-top: 3px solid deepskyblue;
+        }
+
+        #gpu_data .border {
+            border-top: 3px solid rgb(211, 35, 35);
+        }
+
+        .cal_item_unit {
+            margin-left: 0.5em;
+        }
+
+        .attention {
+            font-size: 0.6em;
+            color: red;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-color: black;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        td {
+            text-align: right;
+            padding: 0.2em;
+        }
+
+        td.td_input {
+            text-align: center;
+        }
+
+        select {
+            height: 1.8em;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="flexContainer">
+        <li class="flexItem_half" id="income">
+            <header>収入</header>
+            <ul class="cal_item">
+                <li class="cal_item_name">chia価格(米ドル)</li>
+                <li class="cal_item_box"><input type="text" value="40" id="cal_item_box_chia_price_usd"></li>
+                <li class="cal_item_unit">USD</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">為替 </li>
+                <li class="cal_item_box"><input type="text" value="150" id="cal_item_box_usd_jpy"></li>
+                <li class="cal_item_unit">USD/JPY</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">　</li>
+            </ul>
+            <ul class="cal_item border"></ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">chia価格(円)</li>
+                <li class="cal_item_box">
+                    <span id="cal_item_box_chia_price_jpy"></span>
+                </li>
+                <li class="cal_item_unit">円</li>
+            </ul>
+        </li>
+        <li class="flexItem_half" id="expense">
+            <header>費用</header>
+            <ul class="cal_item">
+                <li class="cal_item_name">電気料金</li>
+                <li class="cal_item_box"><input type="text" value="29.8" id="cal_item_box_electricity_unit_price"></li>
+                <li class="cal_item_unit">円/kWh</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">再エネ賦課金</li>
+                <li class="cal_item_box"><input type="text" value="3.49" id="cal_item_box_electricity_eco_price"></li>
+                <li class="cal_item_unit">円/kWh</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">燃料調整費</li>
+                <li class="cal_item_box"><input type="text" value="-5.71" id="cal_item_box_fuel_adjustment_cost"></li>
+                <li class="cal_item_unit">円/kWh</li>
+            </ul>
+            <ul class="cal_item border"></ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">合計</li>
+                <li class="cal_item_box"><span id="cal_item_box_electricity_total_price"></span></li>
+                <li class="cal_item_unit">円/kWh</li>
+            </ul>
+        </li>
+        <li class="flexItem" id="chia_data">
+            <header>chia 設定</header>
+
+            <ul class="cal_item">
+                <li class="cal_item_name">plotタイプ</li>
+                <li class="cal_item_box">
+                    <select id="plot_type">
+                        <option value="K32">公式 K32(101.4GiB_CPU)</option>
+                        <option value="NOSSD_C1">NOSSD C1(84.5GiB CPU)</option>
+                        <option value="NOSSD_C2">NOSSD C2(82.9GiB CPU)</option>
+                        <option value="NOSSD_C3">NOSSD C3(81.3GiB CPU)</option>
+                        <option value="NOSSD_C4">NOSSD C4(79.7GiB CPU)</option>
+                        <option value="NOSSD_C5">NOSSD C5(78.1GiB CPU)</option>
+                        <option value="NOSSD_C10">NOSSD C10(70.8GiB GPU)</option>
+                        <option value="NOSSD_C11">NOSSD C11(64.9GiB GPU)</option>
+                        <option value="NOSSD_C12">NOSSD C12(60.8GiB GPU)</option>
+                        <option value="NOSSD_C13">NOSSD C13(57.3GiB GPU)</option>
+                        <option value="NOSSD_C14">NOSSD C14(53.8GiB GPU)</option>
+                        <option value="NOSSD_C15" selected>NOSSD C15(50.3GiB GPU)</option>
+                        <option value="GIGAHORSE_C11">Gigahorse C11(85.7GiB GPU)</option>
+                        <option value="GIGAHORSE_C12">Gigahorse C12(82.5GiB GPU)</option>
+                        <option value="GIGAHORSE_C13">Gigahorse C13(78.9GiB GPU)</option>
+                        <option value="GIGAHORSE_C14">Gigahorse C14(74.7iB GPU)</option>
+                        <option value="GIGAHORSE_C15">Gigahorse C15(71.6GiB GPU)</option>
+                        <option value="GIGAHORSE_C16">Gigahorse C16(64.8GiB GPU)</option>
+                        <option value="GIGAHORSE_C17">Gigahorse C17(63.0GiB GPU)</option>
+                        <option value="GIGAHORSE_C18">Gigahorse C18(59.7GiB GPU)</option>
+                        <option value="GIGAHORSE_C19">Gigahorse C19(56.4GiB GPU)</option>
+                        <option value="GIGAHORSE_C20">Gigahorse C20(53.1GiB GPU)</option>
+                        <option value="GIGAHORSE_C30">Gigahorse C30(43.3GiB GPU)</option>
+                        <option value="GIGAHORSE_C31">Gigahorse C31(38.6GiB GPU)</option>
+                        <option value="GIGAHORSE_C32">Gigahorse C32(33.9GiB GPU)</option>
+                        <option value="GIGAHORSE_C33">Gigahorse C33(29.1GiB GPU)</option>
+                    </select>
+                </li>
+            </ul>
+
+            <ul class="cal_item border"></ul>
+
+            <ul class="cal_item">
+                <li class="cal_item_name">当選あたりの収入</li>
+                <li class="cal_item_box"><input type="text" value="1" id="cal_item_box_chia_dividend"></li>
+                <li class="cal_item_unit">XCH</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">network space</li>
+                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_network_space_eib"></li>
+                <li class="cal_item_unit">EiB</li>
+            </ul>
+
+
+            <ul class="cal_item border"></ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">当選期待日数/plot</li>
+                <li class="cal_item_box"><span id="cal_item_box_win_days_per_plot"></span></li>
+                <li class="cal_item_unit">日</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">当選期待日数/TiB</li>
+                <li class="cal_item_box"><span id="cal_item_box_win_days_per_tib"></span></li>
+                <li class="cal_item_unit">日</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">当選期待日数/TB</li>
+                <li class="cal_item_box"><span id="cal_item_box_win_days_per_tb"></span></li>
+                <li class="cal_item_unit">日</li>
+            </ul>
+            <ul class="cal_item border"></ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">1日期待収入/TB</li>
+                <li class="cal_item_box"><span id="cal_item_box_income_tb_per_day_xch"></span></li>
+                <li class="cal_item_unit">XCH</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">1日期待収入/TB</li>
+                <li class="cal_item_box"><span id="cal_item_box_income_tb_per_day_usd"></span></li>
+                <li class="cal_item_unit">USD</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">1日期待収入/TB</li>
+                <li class="cal_item_box"><span id="cal_item_box_income_tb_per_day_jpy"></span></li>
+                <li class="cal_item_unit">円</li>
+            </ul>
+        </li>
+        <li class="flexItem" id="gpu_data">
+            <header>GPU 設定</header>
+            <ul class="cal_item">
+                <li class="cal_item_name">GPU型番</li>
+                <li class="cal_item_box">
+                    <select id="gpu_type">
+                        <option value="RTX3060(8GB)">RTX3060(8GB)</option>
+                        <option value="RTX3060(12GB)">RTX3060(12GB)</option>
+                        <option value="RTX3060Ti(8GB)">RTX3060Ti(8GB)</option>
+                        <option value="RTX3070(8GB)">RTX3070(8GB)</option>
+                        <option value="RTX3070Ti(8GB)">RTX3070Ti(8GB)</option>
+                        <option value="RTX3080(10GB)">RTX3080(10GB)</option>
+                        <option value="RTX3080(12GB)">RTX3080(12GB)</option>
+                        <option value="RTX3080Ti(12GB)">RTX3080Ti(12GB)</option>
+                        <option value="RTX3090(24GB)">RTX3090(24GB)</option>
+                        <option value="RTX3090Ti(24GB)">RTX3090Ti(24GB)</option>
+                        <option value="RTX4060(8GB)">RTX4060(8GB)</option>
+                        <option value="RTX4060Ti(8GB)">RTX4060Ti(8GB)</option>
+                        <option value="RTX4060Ti(16GB)">RTX4060Ti(16GB)</option>
+                        <option value="RTX4070(12GB)">RTX4070(12GB)</option>
+                        <option value="RTX4070Super(12GB)">RTX4070Super(12GB)</option>
+                        <option value="RTX4070Ti(12GB)">RTX4070Ti(12GB)</option>
+                        <option value="RTX4070TiSuper(16TB)">RTX4070TiSuper(16TB)</option>
+                        <option value="RTX4080(16GB)">RTX4080(16GB)</option>
+                        <option value="RTX4080Super(16GB)">RTX4080Super(16GB)</option>
+                        <option value="RTX4090(24GB)">RTX4090(24GB)</option>
+                    </select>
+                    <span id="gb_attention"></span>
+
+                </li>
+            </ul>
+            <ul class="cal_item border"></ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">価格</li>
+                <li class="cal_item_box"><input type="text" value="0" id="cal_item_box_gpu_price"></li>
+                <li class="cal_item_unit">円</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">消費電力</li>
+                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_power_consumption"></li>
+                <li class="cal_item_unit">W</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">処理可能スペース(256/filter)</li>
+                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_processable_space_tib">
+                </li>
+                <li class="cal_item_unit">TiB<span class="attention">※割と雑に計算した予測値です。正しい値がわかるときは修正してください</span></li>
+            </ul>
+            <ul class="cal_item border"></ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">処理可能プロット数</li>
+                <li class="cal_item_box"><span id="cal_item_box_gpu_processable_plot_num"></span></li>
+                <li class="cal_item_unit">plot</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">消費電力/TiB</li>
+                <li class="cal_item_box"><span id="cal_item_box_gpu_power_consumption_per_tib"></span></li>
+                <li class="cal_item_unit">W</li>
+            </ul>
+            <ul class="cal_item">
+                <li class="cal_item_name">消費電力/TB</li>
+                <li class="cal_item_box"><span id="cal_item_box_gpu_power_consumption_per_tb"></span></li>
+                <li class="cal_item_unit">W</li>
+            </ul>
+        </li>
+
+
+
+        <li class="flexItem" id="hdd_profit_data">
+            <header>HDD 収支</header>
+            <table>
+                <tr>
+                    <th>容量<br>(TB)</th>
+                    <th>価格<br>(円)</th>
+                    <th>消費電力<br>
+                        <input type="text" value="7" size="1" name="hdd_power_consumption"
+                            class="hdd_power_consumption">W+GPU
+                    </th>
+                    <th>plot数</th>
+                    <th>収入<br>(day)</th>
+                    <th>費用<br>(day)</th>
+                    <th>利益<br>(day)</th>
+                    <th>利益<br>(year)</th>
+                    <th>回収</th>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="2" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="7000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="4" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="9200" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="6" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="13000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="8" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="17000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="10" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="29800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="12" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="33800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="14" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="37800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="16" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="39800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="18" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="45000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="20" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="53000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="22" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="68900" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="24" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="82800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+            </table>
+        </li>
+
+
+        <li class="flexItem" id="hdd_gpu_profit_data">
+            <header>HDD + GPU 収支</header>
+            <table>
+                <tr>
+                    <th>容量<br>(TB)</th>
+                    <th>HDD<br>価格</th>
+                    <th>GPU<br>価格</th>
+                    <th>消費電力<br>
+                        <input type="text" value="7" size="1" name="hdd_power_consumption"
+                            class="hdd_power_consumption">W+GPU
+                    </th>
+                    <th>plot数</th>
+                    <th>収入<br>(day)</th>
+                    <th>費用<br>(day)</th>
+                    <th>利益<br>(day)</th>
+                    <th>利益<br>(year)</th>
+                    <th>回収</th>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="2" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="7000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="4" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="9200" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="6" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="13000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="8" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="17000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="10" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="29800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="12" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="33800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="14" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="37800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="16" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="39800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="18" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="45000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="20" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="53000" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="22" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="68900" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+                <tr class="hdd_data">
+                    <td class="td_input"><input type="text" value="24" size="1" name="hdd_capa" class="hdd_capa"></td>
+                    <td class="td_input"><input type="text" value="82800" size="2" name="hdd_price" class="hdd_price">
+                    </td>
+                    <td class=gpu_price></td>
+                    <td class=hdd_power_consumption_table></td>
+                    <td class=hdd_plots_num_table></td>
+                    <td class=hdd_revenue_per_day_table></td>
+                    <td class=hdd_expenses_per_day_table></td>
+                    <td class=hdd_profit_per_day_table></td>
+                    <td class=hdd_profit_per_year_table></td>
+                    <td class=hdd_recovery_table></td>
+                </tr>
+            </table>
+            <div>GPU価格=「GPU設定」の価格/処理可能なHDDの台数</div>
+        </li>
+
+    </ul>
+
+
+
+
+</body>
+
+</html>
