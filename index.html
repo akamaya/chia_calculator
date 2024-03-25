@@ -264,6 +264,7 @@
                         <option value="GIGAHORSE_C18">Gigahorse C18(59.7GiB GPU)</option>
                         <option value="GIGAHORSE_C19">Gigahorse C19(56.4GiB GPU)</option>
                         <option value="GIGAHORSE_C20">Gigahorse C20(53.1GiB GPU)</option>
+                        <option value="GIGAHORSE_C29">Gigahorse C29(48.0GiB GPU)</option>
                         <option value="GIGAHORSE_C30">Gigahorse C30(43.3GiB GPU)</option>
                         <option value="GIGAHORSE_C31">Gigahorse C31(38.6GiB GPU)</option>
                         <option value="GIGAHORSE_C32">Gigahorse C32(33.9GiB GPU)</option>
@@ -325,6 +326,8 @@
                 <li class="cal_item_name">GPU型番</li>
                 <li class="cal_item_box">
                     <select id="gpu_type">
+                        <option value="RTX2070(8GB)">RTX2070(8GB)</option>
+                        <option value="RTX2080Ti(11GB)">RTX2080Ti(11GB)</option>
                         <option value="RTX3060(8GB)">RTX3060(8GB)</option>
                         <option value="RTX3060(12GB)">RTX3060(12GB)</option>
                         <option value="RTX3060Ti(8GB)">RTX3060Ti(8GB)</option>
@@ -345,6 +348,8 @@
                         <option value="RTX4080(16GB)">RTX4080(16GB)</option>
                         <option value="RTX4080Super(16GB)">RTX4080Super(16GB)</option>
                         <option value="RTX4090(24GB)">RTX4090(24GB)</option>
+                        <option value="RTXA4000(16GB)">RTXA4000(16GB)</option>
+                        <option value="RTXA5000(24GB)">RTXA5000(24GB)</option>
                     </select>
                     <span id="gb_attention"></span>
 
@@ -365,7 +370,7 @@
                 <li class="cal_item_name">処理可能スペース(256/filter)</li>
                 <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_processable_space_tib">
                 </li>
-                <li class="cal_item_unit">TiB<span class="attention">※割と雑に計算した予測値です。正しい値がわかるときは修正してください</span></li>
+                <li class="cal_item_unit">TiB<span id="space_attention" class="attention">※推定値を表示しています。正しい値がわかるときは修正してください</span></li>
             </ul>
             <ul class="cal_item border"></ul>
             <ul class="cal_item">

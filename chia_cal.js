@@ -1,6 +1,224 @@
+// plotの種類とサイズ一覧
+const PLOT_SIZE = {
+    'K32': 101.4,
+    'NOSSD_C1': 84.5,
+    'NOSSD_C2': 82.9,
+    'NOSSD_C3': 81.3,
+    'NOSSD_C4': 79.7,
+    'NOSSD_C5': 78.1,
+    'NOSSD_C10': 70.8,
+    'NOSSD_C11': 64.9,
+    'NOSSD_C12': 60.8,
+    'NOSSD_C13': 57.3,
+    'NOSSD_C14': 53.8,
+    'NOSSD_C15': 50.3,
+    'GIGAHORSE_C11': 85.7,
+    'GIGAHORSE_C12': 82.5,
+    'GIGAHORSE_C13': 78.9,
+    'GIGAHORSE_C14': 74.7,
+    'GIGAHORSE_C15': 71.6,
+    'GIGAHORSE_C16': 64.8,
+    'GIGAHORSE_C17': 63.0,
+    'GIGAHORSE_C18': 59.7,
+    'GIGAHORSE_C19': 56.4,
+    'GIGAHORSE_C20': 53.1,
+    'GIGAHORSE_C29': 48.0,
+    'GIGAHORSE_C30': 43.3,
+    'GIGAHORSE_C31': 38.6,
+    'GIGAHORSE_C32': 33.9,
+    'GIGAHORSE_C33': 29.1,
+}
+
+// GPUの消費電力一覧
+const GPU_POWER_CONSUMPTION = {
+    'RTX2070(8GB)': 185,
+    'RTX2080Ti(11GB)': 270,
+    'RTX3060(8GB)': 170,
+    'RTX3060(12GB)': 170,
+    'RTX3060Ti(8GB)': 200,
+    'RTX3070(8GB)': 220,
+    'RTX3070Ti(8GB)': 290,
+    'RTX3080(10GB)': 320,
+    'RTX3080(12GB)': 350,
+    'RTX3080Ti(12GB)': 350,
+    'RTX3090(24GB)': 350,
+    'RTX3090Ti(24GB)': 450,
+    'RTX4060(8GB)': 115,
+    'RTX4060Ti(8GB)': 160,
+    'RTX4060Ti(16GB)': 165,
+    'RTX4070(12GB)': 200,
+    'RTX4070Super(12GB)': 220,
+    'RTX4070Ti(12GB)': 285,
+    'RTX4070TiSuper(16TB)': 285,
+    'RTX4080(16GB)': 320,
+    'RTX4080Super(16GB)': 320,
+    'RTX4090(24GB)': 450,
+    'RTXA4000(16GB)': 140,
+    'RTXA5000(24GB)': 230,
+}
+// GPUのお値段一覧
+const GPU_PRICE = {
+    'RTX2070(8GB)': 25000,
+    'RTX2080Ti(11GB)': 45000,
+    'RTX3060(8GB)': 38000,
+    'RTX3060(12GB)': 42000,
+    'RTX3060Ti(8GB)': 60000,
+    'RTX3070(8GB)': 60000,
+    'RTX3070Ti(8GB)': 61000,
+    'RTX3080(10GB)': 90000,
+    'RTX3080(12GB)': 100000,
+    'RTX3080Ti(12GB)': 100000,
+    'RTX3090(24GB)': 262000,
+    'RTX3090Ti(24GB)': 280000,
+    'RTX4060(8GB)': 43000,
+    'RTX4060Ti(8GB)': 55000,
+    'RTX4060Ti(16GB)': 68800,
+    'RTX4070(12GB)': 83000,
+    'RTX4070Super(12GB)': 98000,
+    'RTX4070Ti(12GB)': 110000,
+    'RTX4070TiSuper(16TB)': 130000,
+    'RTX4080(16GB)': 173000,
+    'RTX4080Super(16GB)': 169000,
+    'RTX4090(24GB)': 280000,
+    'RTXA4000(16GB)': 115000,
+    'RTXA5000(24GB)': 360000,
+}
+
+// 処理可能スペース一覧に設定がないときベンチマーク値の比率で推定値に使う
+// ここに書かれたのはNOSSDのC15ベンチマーク値(一部推定値なので割と適当)
+const GPU_POWER = {
+    'RTX2070(8GB)': 9000,
+    'RTX2080Ti(11GB)': 12000,
+    'RTX3060(8GB)': 9600,
+    'RTX3060(12GB)': 9600,
+    'RTX3060Ti(8GB)': 12000,
+    'RTX3070(8GB)': 13500,
+    'RTX3070Ti(8GB)': 15000,
+    'RTX3080(10GB)': 22000,
+    'RTX3080(12GB)': 22000,
+    'RTX3080Ti(12GB)': 23000,
+    'RTX3090(24GB)': 26000,
+    'RTX3090Ti(24GB)': 28500,
+    'RTX4060(8GB)': 17000,
+    'RTX4060Ti(8GB)': 21000,
+    'RTX4060Ti(16GB)': 21000,
+    'RTX4070(12GB)': 27000,
+    'RTX4070Super(12GB)': 35000,
+    'RTX4070Ti(12GB)': 37000,
+    'RTX4070TiSuper(16TB)': 41700,
+    'RTX4080(16GB)': 47000,
+    'RTX4080Super(16GB)': 48000,
+    'RTX4090(24GB)': 62000,
+    'RTXA4000(16GB)': 16000,
+    'RTXA5000(24GB)': 20000,
+}
+
+// GPUの処理可能スペース一覧
+const GPU_PROCESSABLE_SPACE_PiB = [
+    // NOSSD
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C10", size: 63 },// PiB
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C11", size: 22 },
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C12", size: 12.5 },
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C13", size: 7 },
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C14", size: 3.75 },
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C15", size: 1.55 },
+
+
+    // GIGAHORSE
+    { "gpu": "RTX2070(8GB)", "type": "GIGAHORSE_C30", size: 0.27 },// PiB
+    { "gpu": "RTX2070(8GB)", "type": "GIGAHORSE_C31", size: 0.16 },
+
+    { "gpu": "RTX2080Ti(11GB)", "type": "GIGAHORSE_C30", size: 0.45 },
+
+    { "gpu": "RTX3060(8GB)", "type": "GIGAHORSE_C29", size: 0.574 },
+    { "gpu": "RTX3060(8GB)", "type": "GIGAHORSE_C30", size: 0.363 },
+    { "gpu": "RTX3060(8GB)", "type": "GIGAHORSE_C31", size: 0.175 },
+    { "gpu": "RTX3060(8GB)", "type": "GIGAHORSE_C32", size: 0.08 },
+
+    { "gpu": "RTX3060(12GB)", "type": "GIGAHORSE_C29", size: 0.574 },
+    { "gpu": "RTX3060(12GB)", "type": "GIGAHORSE_C30", size: 0.363 },
+    { "gpu": "RTX3060(12GB)", "type": "GIGAHORSE_C31", size: 0.175 },
+    { "gpu": "RTX3060(12GB)", "type": "GIGAHORSE_C32", size: 0.08 },
+
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C11", size: 166.435 },// PiB
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C12", size: 133.365 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C13", size: 75.45 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C14", size: 24.845 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C15", size: 10.50 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C16", size: 2.79 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C17", size: 2.01 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C18", size: 1.225 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C19", size: 0.48 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C20", size: 0.19 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C29", size: 0.798 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C30", size: 0.46 },
+    { "gpu": "RTX3060Ti(8GB)", "type": "GIGAHORSE_C31", size: 0.245 },
+
+    { "gpu": "RTX3070(8GB)", "type": "GIGAHORSE_C30", size: 0.540 },
+    { "gpu": "RTX3070(8GB)", "type": "GIGAHORSE_C31", size: 0.290 },
+
+    { "gpu": "RTX3070Ti(8GB)", "type": "GIGAHORSE_C30", size: 0.580 },
+
+    { "gpu": "RTX3080(10GB)", "type": "GIGAHORSE_C30", size: 0.760 },
+    { "gpu": "RTX3080(10GB)", "type": "GIGAHORSE_C31", size: 0.400 },
+
+    { "gpu": "RTX3080(12GB)", "type": "GIGAHORSE_C30", size: 0.760 },
+    { "gpu": "RTX3080(12GB)", "type": "GIGAHORSE_C31", size: 0.400 },
+
+    { "gpu": "RTX3080Ti(12GB)", "type": "GIGAHORSE_C30", size: 0.90 },
+    { "gpu": "RTX3080Ti(12GB)", "type": "GIGAHORSE_C31", size: 0.470 },
+    { "gpu": "RTX3080Ti(12GB)", "type": "GIGAHORSE_C32", size: 0.210 },
+
+    { "gpu": "RTX3090(24GB)", "type": "GIGAHORSE_C30", size: 0.90 },
+    { "gpu": "RTX3090(24GB)", "type": "GIGAHORSE_C31", size: 0.48 },
+    { "gpu": "RTX3090(24GB)", "type": "GIGAHORSE_C32", size: 0.20 },
+    { "gpu": "RTX3090(24GB)", "type": "GIGAHORSE_C33", size: 0.096 },
+
+    { "gpu": "RTX4060(8GB)", "type": "GIGAHORSE_C30", size: 0.36 },
+    { "gpu": "RTX4060(8GB)", "type": "GIGAHORSE_C31", size: 0.20 },
+
+    { "gpu": "RTX4060Ti(8GB)", "type": "GIGAHORSE_C30", size: 0.45 },
+    { "gpu": "RTX4060Ti(8GB)", "type": "GIGAHORSE_C31", size: 0.25 },
+
+    { "gpu": "RTX4060Ti(16GB)", "type": "GIGAHORSE_C30", size: 0.45 },
+    { "gpu": "RTX4060Ti(16GB)", "type": "GIGAHORSE_C31", size: 0.25 },
+
+    { "gpu": "RTX4070(12GB)", "type": "GIGAHORSE_C30", size: 0.617 },
+    { "gpu": "RTX4070(12GB)", "type": "GIGAHORSE_C31", size: 0.343 },
+    { "gpu": "RTX4070(12GB)", "type": "GIGAHORSE_C32", size: 0.155 },
+
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C29", size: 1.100 },
+    { "gpu": "RTX4070Super(12GB)", "type": "GIGAHORSE_C30", size: 0.700 },
+    { "gpu": "RTX4070Super(12GB)", "type": "GIGAHORSE_C31", size: 0.400 },
+    { "gpu": "RTX4070Super(12GB)", "type": "GIGAHORSE_C32", size: 0.155 },
+
+    { "gpu": "RTX4070TiSuper(16GB)", "type": "GIGAHORSE_C30", size: 0.858 },
+    { "gpu": "RTX4070TiSuper(16GB)", "type": "GIGAHORSE_C31", size: 0.497 },
+    { "gpu": "RTX4070TiSuper(16GB)", "type": "GIGAHORSE_C32", size: 0.244 },
+
+    { "gpu": "RTX4080(16GB)", "type": "GIGAHORSE_C30", size: 0.9 },
+    { "gpu": "RTX4080(16GB)", "type": "GIGAHORSE_C31", size: 0.5 },
+
+    { "gpu": "RTX4080Super(16GB)", "type": "GIGAHORSE_C31", size: 0.234 },
+
+    { "gpu": "RTX4090(24GB)", "type": "GIGAHORSE_C30", size: 1.33 },
+    { "gpu": "RTX4090(24GB)", "type": "GIGAHORSE_C31", size: 0.75 },
+    { "gpu": "RTX4090(24GB)", "type": "GIGAHORSE_C32", size: 0.33 },
+    { "gpu": "RTX4090(24GB)", "type": "GIGAHORSE_C33", size: 0.14 },
+
+    { "gpu": "RTXA4000(24GB)", "type": "GIGAHORSE_C31", size: 0.23 },
+    { "gpu": "RTXA4000(24GB)", "type": "GIGAHORSE_C32", size: 0.105 },
+
+    { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C30", size: 0.61 },
+    { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C31", size: 0.335 },
+    { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C32", size: 0.155 },
+    { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C33", size: 0.065 },
+]
+
+
+
+
 //ドキュメント内のどれでもいいのでinput textの要素が変更されたら、cal系関数を実行する
-
-
 
 function cal_all() {
     const item_box_values = item_box_to_values();
@@ -30,39 +248,11 @@ function item_box_to_values() {
     });
 
     // plotの情報を取得(GiB)
-    const plot_size= {
-        'K32':101.4,
-        'NOSSD_C1':84.5,
-        'NOSSD_C2':82.9,
-        'NOSSD_C3':81.3,
-        'NOSSD_C4':79.7,
-        'NOSSD_C5':78.1,
-        'NOSSD_C10':70.8,
-        'NOSSD_C11':64.9,
-        'NOSSD_C12':60.8,
-        'NOSSD_C13':57.3,
-        'NOSSD_C14':53.8,
-        'NOSSD_C15':50.3,
-        'GIGAHORSE_C11':85.7,
-        'GIGAHORSE_C12':82.5,
-        'GIGAHORSE_C13':78.9,
-        'GIGAHORSE_C14':74.7,
-        'GIGAHORSE_C15':71.6,
-        'GIGAHORSE_C16':64.8,
-        'GIGAHORSE_C17':63.0,
-        'GIGAHORSE_C18':59.7,
-        'GIGAHORSE_C19':56.4,
-        'GIGAHORSE_C20':53.1,
-        'GIGAHORSE_C30':43.3,
-        'GIGAHORSE_C31':38.6,
-        'GIGAHORSE_C32':33.9,
-        'GIGAHORSE_C33':29.1,
-    }
     const selectBox = document.getElementById('plot_type');
     const selectedOption = selectBox.options[selectBox.selectedIndex];
     const selectValue = selectedOption.value;
-    item_box_values.official_plot_size = plot_size['K32'];
-    item_box_values.plot_size = plot_size[selectValue];
+    item_box_values.official_plot_size = PLOT_SIZE['K32'];
+    item_box_values.plot_size = PLOT_SIZE[selectValue];
 
 
     return item_box_values;
@@ -289,55 +479,11 @@ function set_gpu_power_consumption_and_price_data(){
     const gpu_type = selectedOption_gpu.value;
 
     // GPUの消費電力をセット
-    const gpu_power_consumption = {
-        'RTX3060(8GB)': 170,
-        'RTX3060(12GB)': 170,
-        'RTX3060Ti(8GB)': 200,
-        'RTX3070(8GB)': 220,
-        'RTX3070Ti(8GB)': 290,
-        'RTX3080(10GB)': 320,
-        'RTX3080(12GB)': 350,
-        'RTX3080Ti(12GB)': 350,
-        'RTX3090(24GB)': 350,
-        'RTX3090Ti(24GB)': 450,
-        'RTX4060(8GB)': 115,
-        'RTX4060Ti(8GB)': 160,
-        'RTX4060Ti(16GB)': 165,
-        'RTX4070(12GB)': 200,
-        'RTX4070Super(12GB)': 220,
-        'RTX4070Ti(12GB)': 285,
-        'RTX4070TiSuper(16TB)': 285,
-        'RTX4080(16GB)': 320,
-        'RTX4080Super(16GB)': 320,
-        'RTX4090(24GB)': 450,
-    }
-    const gpu_price = {
-        'RTX3060(8GB)': 38000,
-        'RTX3060(12GB)': 42000,
-        'RTX3060Ti(8GB)': 60000,
-        'RTX3070(8GB)': 60000,
-        'RTX3070Ti(8GB)': 61000,
-        'RTX3080(10GB)': 90000,
-        'RTX3080(12GB)': 100000,
-        'RTX3080Ti(12GB)': 100000,
-        'RTX3090(24GB)': 262000,
-        'RTX3090Ti(24GB)': 280000,
-        'RTX4060(8GB)': 43000,
-        'RTX4060Ti(8GB)': 55000,
-        'RTX4060Ti(16GB)': 68800,
-        'RTX4070(12GB)': 83000,
-        'RTX4070Super(12GB)': 98000,
-        'RTX4070Ti(12GB)': 110000,
-        'RTX4070TiSuper(16TB)': 130000,
-        'RTX4080(16GB)': 173000,
-        'RTX4080Super(16GB)': 169000,
-        'RTX4090(24GB)': 280000,
-    }
     const item_box_gpu_power_consumption = document.getElementById('cal_item_box_gpu_power_consumption');
-    item_box_gpu_power_consumption.value = gpu_power_consumption[gpu_type];
+    item_box_gpu_power_consumption.value = GPU_POWER_CONSUMPTION[gpu_type];
 
     const cal_item_box_gpu_price = document.getElementById('cal_item_box_gpu_price');
-    cal_item_box_gpu_price.value = gpu_price[gpu_type];
+    cal_item_box_gpu_price.value = GPU_PRICE[gpu_type];
 }
 
 
@@ -356,67 +502,35 @@ function set_gpu_processable_space_data(){
 
     // 処理可能スペースをセット
 
-    // 処理可能スペース推定値に使うGPU処理能力(3D mark Time Spy)
-    const gpu_power = {
-        'RTX3060(8GB)': 9600,
-        'RTX3060(12GB)': 9600,
-        'RTX3060Ti(8GB)': 12000,
-        'RTX3070(8GB)': 13500,
-        'RTX3070Ti(8GB)': 15000,
-        'RTX3080(10GB)': 22000,
-        'RTX3080(12GB)': 22000,
-        'RTX3080Ti(12GB)': 23000,
-        'RTX3090(24GB)': 26000,
-        'RTX3090Ti(24GB)': 28500,
-        'RTX4060(8GB)': 17000,
-        'RTX4060Ti(8GB)': 21000,
-        'RTX4060Ti(16GB)': 21000,
-        'RTX4070(12GB)': 27000,
-        'RTX4070Super(12GB)': 35000,
-        'RTX4070Ti(12GB)': 37000,
-        'RTX4070TiSuper(16TB)': 41700,
-        'RTX4080(16GB)': 47000,
-        'RTX4080Super(16GB)': 48000,
-        'RTX4090(24GB)': 62000,
-        'RTXA5000(24GB)': 20000,
+    // GPU_PROCESSABLE_SPACE_PiBからtypeがplot_typeとGPUが一致するものを取得
+    let gpu_processable_space_data = GPU_PROCESSABLE_SPACE_PiB.find(function (element) {
+        return element.type == plot_type && element.gpu == gpu_type;
+    });
+
+    let processable_space_tib;
+
+    // 見つかった場合はtibに変換して処理可能スペースをセット
+    if (gpu_processable_space_data) {
+        processable_space_tib = gpu_processable_space_data.size * 1024;
+        // 推定値の警告を消す
+        const space_attention = document.getElementById('space_attention');
+        space_attention.style.display = 'none';
+    }
+    // 見つからなかった場合はplot_typeだけが一致するものを取得して推定値を算出する
+    else {
+        // GPU_PROCESSABLE_SPACE_PiBからplot_typeが一致するものを取得
+        const same_plot_type_data = GPU_PROCESSABLE_SPACE_PiB.find(function (element) {
+            return element.type == plot_type;
+        });
+        const base_gpu_power = GPU_POWER[same_plot_type_data.gpu];
+        const selected_gpu_power = GPU_POWER[gpu_type];
+        processable_space_tib = Math.floor(same_plot_type_data.size * 1024 * selected_gpu_power / base_gpu_power);
+
+        // 警告を出す
+        const space_attention = document.getElementById('space_attention');
+        space_attention.style.display = 'inline';
     }
 
-    const gpu_processable_space_pib = [
-        {"type": "NOSSD_C10","gpu":"RTX4090(24GB)",size: 63},// PiB
-        {"type": "NOSSD_C11","gpu":"RTX4090(24GB)",size: 22},
-        {"type": "NOSSD_C12","gpu":"RTX4090(24GB)",size: 12.5},
-        {"type": "NOSSD_C13","gpu":"RTX4090(24GB)",size: 7},
-        {"type": "NOSSD_C14","gpu":"RTX4090(24GB)",size: 3.75},
-        {"type": "NOSSD_C15","gpu":"RTX4090(24GB)",size: 1.55},
-        {"type": "GIGAHORSE_C11","gpu":"RTX3060Ti(8GB)",size: 166.435},// PiB
-        {"type": "GIGAHORSE_C12","gpu":"RTX3060Ti(8GB)",size: 133.365},
-        {"type": "GIGAHORSE_C13","gpu":"RTX3060Ti(8GB)",size: 75.45},
-        {"type": "GIGAHORSE_C14","gpu":"RTX3060Ti(8GB)",size: 24.845},
-        {"type": "GIGAHORSE_C15","gpu":"RTX3060Ti(8GB)",size: 10.50},
-        {"type": "GIGAHORSE_C16","gpu":"RTX3060Ti(8GB)",size: 2.79},
-        {"type": "GIGAHORSE_C17","gpu":"RTX3060Ti(8GB)",size: 2.01},
-        {"type": "GIGAHORSE_C18","gpu":"RTX3060Ti(8GB)",size: 1.225},
-        {"type": "GIGAHORSE_C19","gpu":"RTX3060Ti(8GB)",size: 0.48},
-        {"type": "GIGAHORSE_C20","gpu":"RTX3060Ti(8GB)",size: 0.19},
-        {"type": "GIGAHORSE_C30","gpu":"RTXA5000(24GB)",size: 0.61},
-        {"type": "GIGAHORSE_C31","gpu":"RTXA5000(24GB)",size: 0.335},
-        {"type": "GIGAHORSE_C32","gpu":"RTXA5000(24GB)",size: 0.155},
-        {"type": "GIGAHORSE_C33","gpu":"RTXA5000(24GB)",size: 0.065},
-    ]
-
-    //   gpu_processable_space_pibからtypeがplot_typeと一致するものを取得
-    const gpu_processable_space_data = gpu_processable_space_pib.find(function(element){
-        return element.type == plot_type;
-    }); 
-
-    if(gpu_processable_space_data == undefined){
-        return
-    }
-
-    const base_gpu_power = gpu_power[gpu_processable_space_data.gpu];
-
-    const selected_gpu_power = gpu_power[gpu_type];
-    const processable_space_tib = Math.floor(gpu_processable_space_data.size * 1024 * selected_gpu_power / base_gpu_power)
     const cal_item_box_gpu_processable_space_tib = document.getElementById('cal_item_box_gpu_processable_space_tib');
     cal_item_box_gpu_processable_space_tib.value = processable_space_tib;
 }
