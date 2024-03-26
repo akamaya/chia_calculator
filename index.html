@@ -31,9 +31,11 @@
             flex-wrap: wrap;
             justify-content: space-between;
             padding: 10px;
+            min-width: 20em;
         }
 
         .flexItem {
+            min-width:20em;
             width: 100%;
             border-radius: 1em;
             border: 3px solid deepskyblue;
@@ -43,7 +45,7 @@
         }
 
         .flexItem_half {
-            width: 48%;
+            min-width:48%;
             border-radius: 1em;
             border: 3px solid deepskyblue;
             box-sizing: border-box;
@@ -94,10 +96,6 @@
         .cal_item {
             display: flex;
             margin-left: 1em;
-        }
-
-        .flexContainer{
-            min-width: 20em;
         }
 
         .flexItem .cal_item_name {
