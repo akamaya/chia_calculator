@@ -96,6 +96,10 @@
             margin-left: 1em;
         }
 
+        .flexContainer{
+            min-width: 20em;
+        }
+
         .flexItem .cal_item_name {
             inline-size: 16em;
         }
@@ -147,6 +151,12 @@
 
         .attention {
             font-size: 0.6em;
+            text-align: right;
+            color: red;
+        }
+        #gb_attention {
+            font-size: 0.6em;
+            text-align: right;
             color: red;
         }
 
@@ -351,7 +361,7 @@
                         <option value="RTXA4000(16GB)">RTXA4000(16GB)</option>
                         <option value="RTXA5000(24GB)">RTXA5000(24GB)</option>
                     </select>
-                    <span id="gb_attention"></span>
+                    <div id="gb_attention"></div>
 
                 </li>
             </ul>
@@ -368,9 +378,11 @@
             </ul>
             <ul class="cal_item">
                 <li class="cal_item_name">処理可能スペース(256/filter)</li>
-                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_processable_space_tib">
-                </li>
-                <li class="cal_item_unit">TiB<span id="space_attention" class="attention">※推定値を表示しています。正しい値がわかるときは修正してください</span></li>
+                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_processable_space_tib"></li>
+                <li class="cal_item_unit">TiB</li>
+                </ul>
+                <ul class="cal_item">
+                    <li id="space_attention" class="cal_item_unit attention">※処理可能スペースは推定値を表示しています。正しい値がわかるときは修正してください</li>
             </ul>
             <ul class="cal_item border"></ul>
             <ul class="cal_item">

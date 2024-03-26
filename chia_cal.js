@@ -116,13 +116,54 @@ const GPU_POWER = {
 // GPUの処理可能スペース一覧
 const GPU_PROCESSABLE_SPACE_PiB = [
     // NOSSD
-    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C10", size: 63 },// PiB
+    { "gpu": "RTX3060(8GB)", "type": "NOSSD_C10", size: 10.51 },// PiB
+    { "gpu": "RTX3060(8GB)", "type": "NOSSD_C11", size: 3.62 },
+    { "gpu": "RTX3060(8GB)", "type": "NOSSD_C12", size: 1.98 },
+    { "gpu": "RTX3060(8GB)", "type": "NOSSD_C13", size: 1.18 },
+    { "gpu": "RTX3060(8GB)", "type": "NOSSD_C14", size: 0.60 },
+    { "gpu": "RTX3060(8GB)", "type": "NOSSD_C15", size: 0.24 },
+
+    { "gpu": "RTX3060(12GB)", "type": "NOSSD_C10", size: 10.51 },
+    { "gpu": "RTX3060(12GB)", "type": "NOSSD_C11", size: 3.62 },
+    { "gpu": "RTX3060(12GB)", "type": "NOSSD_C12", size: 1.98 },
+    { "gpu": "RTX3060(12GB)", "type": "NOSSD_C13", size: 1.18 },
+    { "gpu": "RTX3060(12GB)", "type": "NOSSD_C14", size: 0.60 },
+    { "gpu": "RTX3060(12GB)", "type": "NOSSD_C15", size: 0.24 },
+
+    { "gpu": "RTX3080(10GB)", "type": "NOSSD_C10", size: 21.56 },
+    { "gpu": "RTX3080(10GB)", "type": "NOSSD_C11", size: 7.66 },
+    { "gpu": "RTX3080(10GB)", "type": "NOSSD_C12", size: 4.67 },
+    { "gpu": "RTX3080(10GB)", "type": "NOSSD_C13", size: 2.51 },
+    { "gpu": "RTX3080(10GB)", "type": "NOSSD_C14", size: 1.24 },
+    { "gpu": "RTX3080(10GB)", "type": "NOSSD_C15", size: 0.52 },
+
+    { "gpu": "RTX3080(12GB)", "type": "NOSSD_C10", size: 21.56 },
+    { "gpu": "RTX3080(12GB)", "type": "NOSSD_C11", size: 7.66 },
+    { "gpu": "RTX3080(12GB)", "type": "NOSSD_C12", size: 4.67 },
+    { "gpu": "RTX3080(12GB)", "type": "NOSSD_C13", size: 2.51 },
+    { "gpu": "RTX3080(12GB)", "type": "NOSSD_C14", size: 1.24 },
+    { "gpu": "RTX3080(12GB)", "type": "NOSSD_C15", size: 0.52 },
+
+    { "gpu": "RTX4080(16GB)", "type": "NOSSD_C10", size: 40.01 },
+    { "gpu": "RTX4080(16GB)", "type": "NOSSD_C11", size: 13.82 },
+    { "gpu": "RTX4080(16GB)", "type": "NOSSD_C12", size: 8.27 },
+    { "gpu": "RTX4080(16GB)", "type": "NOSSD_C13", size: 4.78 },
+    { "gpu": "RTX4080(16GB)", "type": "NOSSD_C14", size: 2.50 },
+    { "gpu": "RTX4080(16GB)", "type": "NOSSD_C15", size: 1.04 },
+
+    { "gpu": "RTX4090(24GB)", "type": "NOSSD_C10", size: 63 },
     { "gpu": "RTX4090(24GB)", "type": "NOSSD_C11", size: 22 },
     { "gpu": "RTX4090(24GB)", "type": "NOSSD_C12", size: 12.5 },
     { "gpu": "RTX4090(24GB)", "type": "NOSSD_C13", size: 7 },
     { "gpu": "RTX4090(24GB)", "type": "NOSSD_C14", size: 3.75 },
     { "gpu": "RTX4090(24GB)", "type": "NOSSD_C15", size: 1.55 },
 
+    { "gpu": "RTXA4000(16GB)", "type": "NOSSD_C10", size: 13.98 },
+    { "gpu": "RTXA4000(16GB)", "type": "NOSSD_C11", size: 4.91 },
+    { "gpu": "RTXA4000(16GB)", "type": "NOSSD_C12", size: 2.51 },
+    { "gpu": "RTXA4000(16GB)", "type": "NOSSD_C13", size: 1.46 },
+    { "gpu": "RTXA4000(16GB)", "type": "NOSSD_C14", size: 0.76 },
+    { "gpu": "RTXA4000(16GB)", "type": "NOSSD_C15", size: 0.33 },
 
     // GIGAHORSE
     { "gpu": "RTX2070(8GB)", "type": "GIGAHORSE_C30", size: 0.27 },// PiB
@@ -518,13 +559,28 @@ function set_gpu_processable_space_data(){
     }
     // 見つからなかった場合はplot_typeだけが一致するものを取得して推定値を算出する
     else {
-        // GPU_PROCESSABLE_SPACE_PiBからplot_typeが一致するものを取得
-        const same_plot_type_data = GPU_PROCESSABLE_SPACE_PiB.find(function (element) {
-            return element.type == plot_type;
+        // GPU_PROCESSABLE_SPACE_PiBからplot_typeが一致するものを取得。
+        //文字列の先頭からできるだけ一致するものを取得する(できるだけ世代の近いやつを選ぶ)
+        let max_match_bentch = undefined;
+        let max_match_count = 0;
+        GPU_PROCESSABLE_SPACE_PiB.forEach(function (bench, index) {
+            if (bench.type == plot_type) {
+                const match_count = countMatchingChars(bench.gpu, gpu_type);
+                if (match_count > max_match_count) {
+                    max_match_count = match_count;
+                    max_match_bentch = bench;
+                }
+            }
         });
-        const base_gpu_power = GPU_POWER[same_plot_type_data.gpu];
+        console.log("benchmark guess:" + gpu_type + " vs " + max_match_bentch.gpu);
+        if (max_match_bentch === undefined) {
+            console.log("no matching bench found:", gpu_type);
+            return;
+        }
+
+        const base_gpu_power = GPU_POWER[max_match_bentch.gpu];
         const selected_gpu_power = GPU_POWER[gpu_type];
-        processable_space_tib = Math.floor(same_plot_type_data.size * 1024 * selected_gpu_power / base_gpu_power);
+        processable_space_tib = Math.floor(max_match_bentch.size * 1024 * selected_gpu_power / base_gpu_power);
 
         // 警告を出す
         const space_attention = document.getElementById('space_attention');
@@ -533,6 +589,20 @@ function set_gpu_processable_space_data(){
 
     const cal_item_box_gpu_processable_space_tib = document.getElementById('cal_item_box_gpu_processable_space_tib');
     cal_item_box_gpu_processable_space_tib.value = processable_space_tib;
+}
+
+function countMatchingChars(str1, str2) {
+    let count = 0;
+    // 最短の文字列の長さまでループを実行
+    const minLength = Math.min(str1.length, str2.length);
+    for (let i = 0; i < minLength; i++) {
+        if (str1[i] === str2[i]) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    return count;
 }
 
 function set_gpu_gb_attention(){
