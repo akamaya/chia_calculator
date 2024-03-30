@@ -436,8 +436,12 @@ function cal_hdd_profit_data(item_box_values){
         let hdd_recovery_table = "-";
         if(hdd_profit_per_day_table > 0){
             const hdd_recovery_days_table = Math.ceil(hdd_price / hdd_profit_per_day_table);
-            const hdd_recovery_years = Math.ceil(hdd_recovery_days_table / 365);
-            const hdd_recovery_months = Math.floor((hdd_recovery_days_table % 365) / 30);
+            let hdd_recovery_years = Math.ceil(hdd_recovery_days_table / 365);
+            let hdd_recovery_months = Math.floor((hdd_recovery_days_table % 365) / 30);
+            if(hdd_recovery_months === 12){
+                hdd_recovery_years += 1;
+                hdd_recovery_months = 0;
+            }
             hdd_recovery_table = hdd_recovery_years + '年' + hdd_recovery_months + 'ヶ月';
         }
 
