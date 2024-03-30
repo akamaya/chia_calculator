@@ -433,17 +433,7 @@ function cal_hdd_profit_data(item_box_values){
         const hdd_profit_per_year_table = hdd_profit_per_day_table * 365;
         hdd_data.getElementsByClassName('hdd_profit_per_year_table')[0].textContent = Math.floor(hdd_profit_per_year_table);
         
-        let hdd_recovery_table = "-";
-        if(hdd_profit_per_day_table > 0){
-            const hdd_recovery_days_table = Math.ceil(hdd_price / hdd_profit_per_day_table);
-            let hdd_recovery_years = Math.ceil(hdd_recovery_days_table / 365);
-            let hdd_recovery_months = Math.floor((hdd_recovery_days_table % 365) / 30);
-            if(hdd_recovery_months === 12){
-                hdd_recovery_years += 1;
-                hdd_recovery_months = 0;
-            }
-            hdd_recovery_table = hdd_recovery_years + '年' + hdd_recovery_months + 'ヶ月';
-        }
+        const hdd_recovery_table = cal_recovery_year_month(hdd_price , hdd_profit_per_day_table);
 
         hdd_data.getElementsByClassName('hdd_recovery_table')[0].textContent = hdd_recovery_table;
         
@@ -495,19 +485,28 @@ function cal_hdd_gpu_profit_data(item_box_values){
         const hdd_profit_per_year_table = hdd_profit_per_day_table * 365;
         hdd_data.getElementsByClassName('hdd_profit_per_year_table')[0].textContent = Math.floor(hdd_profit_per_year_table);
         
-        let hdd_recovery_table = "-";
-        if(hdd_profit_per_day_table > 0){
-            const hdd_recovery_days_table = Math.ceil((hdd_price + gpu_price_per_hdd) / hdd_profit_per_day_table);
-            const hdd_recovery_years = Math.ceil(hdd_recovery_days_table / 365);
-            const hdd_recovery_months = Math.floor((hdd_recovery_days_table % 365) / 30);
-            hdd_recovery_table = hdd_recovery_years + '年' + hdd_recovery_months + 'ヶ月';
-        }
+        const hdd_recovery_table = cal_recovery_year_month(hdd_price + gpu_price_per_hdd, hdd_profit_per_day_table);
 
         hdd_data.getElementsByClassName('hdd_recovery_table')[0].textContent = hdd_recovery_table;
         
         
     });
     
+}
+
+function cal_recovery_year_month(price, profit_per_day){
+    let recovery_table = "-";
+    if(profit_per_day > 0){
+        const recovery_days_table = Math.ceil(price / profit_per_day);
+        let recovery_years = Math.floor(recovery_days_table / 365);
+        let recovery_months = Math.ceil((recovery_days_table % 365) / 30);
+        if(recovery_months === 12){
+            recovery_years += 1;
+            recovery_months = 0;
+        }
+        recovery_table = recovery_years + '年' + recovery_months + 'ヶ月';
+    }
+    return recovery_table;
 }
 
 // GPUが選択されたときは消費電力と価格を変更する
