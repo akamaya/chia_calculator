@@ -85,7 +85,7 @@ const GPU_PRICE = {
 }
 
 // 処理可能スペース一覧に設定がないときベンチマーク値の比率で推定値に使う
-// ここに書かれたのはNOSSDのC15ベンチマーク値(一部推定値なので割と適当)
+// ここに書かれたのはNOSSDの512filterのC15ベンチマーク値(一部推定値なので割と適当)
 const GPU_POWER = {
     'RTX2070(8GB)': 9000,
     'RTX2080Ti(11GB)': 12000,
@@ -102,13 +102,13 @@ const GPU_POWER = {
     'RTX4060(8GB)': 17000,
     'RTX4060Ti(8GB)': 21000,
     'RTX4060Ti(16GB)': 21000,
-    'RTX4070(12GB)': 27000,
-    'RTX4070Super(12GB)': 35000,
-    'RTX4070Ti(12GB)': 37000,
-    'RTX4070TiSuper(16TB)': 41700,
-    'RTX4080(16GB)': 47000,
-    'RTX4080Super(16GB)': 48000,
-    'RTX4090(24GB)': 62000,
+    'RTX4070(12GB)': 25300,
+    'RTX4070Super(12GB)': 30500,
+    'RTX4070Ti(12GB)': 33200,
+    'RTX4070TiSuper(16TB)': 35400,
+    'RTX4080(16GB)': 41300,
+    'RTX4080Super(16GB)': 41300,
+    'RTX4090(24GB)': 53200,
     'RTXA4000(16GB)': 16000,
     'RTXA5000(24GB)': 20000,
 }
@@ -143,6 +143,13 @@ const GPU_PROCESSABLE_SPACE_PiB = [
     { "gpu": "RTX3080(12GB)", "type": "NOSSD_C13", size: 2.51 },
     { "gpu": "RTX3080(12GB)", "type": "NOSSD_C14", size: 1.24 },
     { "gpu": "RTX3080(12GB)", "type": "NOSSD_C15", size: 0.52 },
+
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C10", size: 30.16 },
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C11", size: 10.15 },
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C12", size: 6.06 },
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C13", size: 3.47 },
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C14", size: 1.80 },
+    { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C15", size: 0.74 },
 
     { "gpu": "RTX4080(16GB)", "type": "NOSSD_C10", size: 40.01 },
     { "gpu": "RTX4080(16GB)", "type": "NOSSD_C11", size: 13.82 },
