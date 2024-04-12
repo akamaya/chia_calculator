@@ -35,7 +35,7 @@
         }
 
         .flexItem {
-            min-width:20em;
+            min-width: 20em;
             width: 100%;
             border-radius: 1em;
             border: 3px solid deepskyblue;
@@ -45,7 +45,7 @@
         }
 
         .flexItem_half {
-            min-width:48%;
+            min-width: 48%;
             border-radius: 1em;
             border: 3px solid deepskyblue;
             box-sizing: border-box;
@@ -152,6 +152,7 @@
             text-align: right;
             color: red;
         }
+
         #gb_attention {
             font-size: 0.6em;
             text-align: right;
@@ -352,7 +353,7 @@
                         <option value="RTX4070(12GB)">RTX4070(12GB)</option>
                         <option value="RTX4070Super(12GB)">RTX4070Super(12GB)</option>
                         <option value="RTX4070Ti(12GB)">RTX4070Ti(12GB)</option>
-                        <option value="RTX4070TiSuper(16TB)">RTX4070TiSuper(16TB)</option>
+                        <option value="RTX4070TiSuper(16GB)">RTX4070TiSuper(16GB)</option>
                         <option value="RTX4080(16GB)">RTX4080(16GB)</option>
                         <option value="RTX4080Super(16GB)">RTX4080Super(16GB)</option>
                         <option value="RTX4090(24GB)">RTX4090(24GB)</option>
@@ -376,11 +377,12 @@
             </ul>
             <ul class="cal_item">
                 <li class="cal_item_name">処理可能スペース(256/filter)</li>
-                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_processable_space_tib"></li>
+                <li class="cal_item_box"><input type="text" value="35.0" id="cal_item_box_gpu_processable_space_tib">
+                </li>
                 <li class="cal_item_unit">TiB</li>
-                </ul>
-                <ul class="cal_item">
-                    <li id="space_attention" class="cal_item_unit attention">※処理可能スペースは推定値を表示しています。正しい値がわかるときは修正してください</li>
+            </ul>
+            <ul class="cal_item">
+                <li id="space_attention" class="cal_item_unit attention">※処理可能スペースは推定値を表示しています。正しい値がわかるときは修正してください</li>
             </ul>
             <ul class="cal_item border"></ul>
             <ul class="cal_item">
