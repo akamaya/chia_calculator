@@ -589,11 +589,12 @@ function set_gpu_processable_space_data(){
                 }
             }
         });
-        console.log("benchmark guess:" + gpu_type + " vs " + max_match_bentch.gpu);
+        
         if (max_match_bentch === undefined) {
             console.log("no matching bench found:", gpu_type);
             return;
         }
+        console.log("benchmark guess:" + gpu_type + " vs " + max_match_bentch.gpu);
 
         const base_gpu_power = GPU_POWER[max_match_bentch.gpu];
         const selected_gpu_power = GPU_POWER[gpu_type];
