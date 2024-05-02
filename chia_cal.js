@@ -245,7 +245,6 @@ const GPU_PROCESSABLE_SPACE_PiB = [
     { "gpu": "RTX4070Super(12GB)", "type": "NOSSD_C29", size: 1.100 },
     { "gpu": "RTX4070Super(12GB)", "type": "GIGAHORSE_C30", size: 0.700 },
     { "gpu": "RTX4070Super(12GB)", "type": "GIGAHORSE_C31", size: 0.400 },
-    { "gpu": "RTX4070Super(12GB)", "type": "GIGAHORSE_C32", size: 0.155 },
 
     { "gpu": "RTX4070TiSuper(16GB)", "type": "GIGAHORSE_C30", size: 0.858 },
     { "gpu": "RTX4070TiSuper(16GB)", "type": "GIGAHORSE_C31", size: 0.497 },
@@ -513,8 +512,8 @@ function cal_recovery_year_month(price, profit_per_day){
     if(profit_per_day > 0){
         const recovery_days_table = Math.ceil(price / profit_per_day);
         let recovery_years = Math.floor(recovery_days_table / 365);
-        let recovery_months = Math.ceil((recovery_days_table % 365) / 30);
-        if(recovery_months === 12){
+        let recovery_months = Math.ceil((recovery_days_table % 365) / 30);// 361日以上余ると13ヶ月になる
+        if (recovery_months >= 12) {
             recovery_years += 1;
             recovery_months = 0;
         }
