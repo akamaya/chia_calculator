@@ -25,8 +25,9 @@ const PLOT_SIZE = {
     'GIGAHORSE_C29': 48.0,
     'GIGAHORSE_C30': 43.3,
     'GIGAHORSE_C31': 38.6,
-    'GIGAHORSE_C32': 33.9,
-    'GIGAHORSE_C33': 29.1,
+    // DrPlotter
+    'DrPlotter_Eco3x': 34.4,
+    'DrPlotter_Pro4x': 24.6,
 }
 
 // GPUの消費電力一覧
@@ -267,6 +268,12 @@ const GPU_PROCESSABLE_SPACE_PiB = [
     { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C31", size: 0.335 },
     { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C32", size: 0.155 },
     { "gpu": "RTXA5000(24GB)", "type": "GIGAHORSE_C33", size: 0.065 },
+
+    // DrPlotter
+    { "gpu": "RTX3090(24GB)", "type": "DrPlotter_Eco3x", size: 0.245 },//PiB
+    { "gpu": "RTX3090(24GB)", "type": "DrPlotter_Pro4x", size: 0.10 },
+    { "gpu": "RTX4090(24GB)", "type": "DrPlotter_Eco3x", size: 0.450 },
+    { "gpu": "RTX4090(24GB)", "type": "DrPlotter_Pro4x", size: 0.20 },
 ]
 
 
@@ -624,8 +631,10 @@ function countMatchingChars(str1, str2) {
 
 function set_gpu_gb_attention(){
     const plot_attention = {
-        'GIGAHORSE_C32':"12GB以上のGPUを選択してください",
-        'GIGAHORSE_C33':"24GB以上のGPUを選択してください",
+        'GIGAHORSE_C32': "12GB以上のGPUを選択してください",
+        'GIGAHORSE_C33': "24GB以上のGPUを選択してください",
+        'DrPlotter_Eco3x': "24GB以上のGPUを選択してください",
+        'DrPlotter_Pro4x': "24GB以上のGPUを選択してください",
     }
 
     // 選択されているplotのタイプを取得
