@@ -25,6 +25,8 @@ const PLOT_SIZE = {
     'GIGAHORSE_C29': 48.0,
     'GIGAHORSE_C30': 43.3,
     'GIGAHORSE_C31': 38.6,
+    'GIGAHORSE_C32': 33.9,
+    'GIGAHORSE_C33': 29.1,
     // DrPlotter
     'DrPlotter_Eco3x': 34.4,
     'DrPlotter_Pro4x': 24.6,
